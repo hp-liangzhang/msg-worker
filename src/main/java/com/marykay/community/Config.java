@@ -8,8 +8,10 @@ public class Config {
     private int port;
     private String amqpURI;
     private String exchange;
-    private String queue;
+    private String exchangeType;
+    private String queueName;
     private String consumerTag;
+    private String routingKey;
 
     public static Config Load() {
         Config config = new Config();
@@ -21,9 +23,11 @@ public class Config {
         }
 
         config.amqpURI = loadEnv("AMQP_URI", "amqp://localhost:5672/");
-        config.exchange = loadEnv("EXCHANGE", "test-exchange");
-        config.queue = loadEnv("EXCHANGE", "test-queue");
-        config.consumerTag = loadEnv("CONSUMER_TAG", "test-tag");
+        config.exchange = loadEnv("EXCHANGE", ""); // default exchange
+        config.exchangeType = loadEnv("EXCHANGE_TYPE", "direct");
+        config.queueName = loadEnv("QUEUE_NAME", "test");
+        config.consumerTag = loadEnv("CONSUMER_TAG", "msg-worker");
+        config.routingKey = loadEnv("ROUTING_KEY", "*");
 
         return config;
     }
@@ -57,12 +61,12 @@ public class Config {
         this.exchange = exchange;
     }
 
-    public String getQueue() {
-        return queue;
+    public String getQueueName() {
+        return queueName;
     }
 
-    public void setQueue(String queue) {
-        this.queue = queue;
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
     }
 
     public String getConsumerTag() {
@@ -72,4 +76,21 @@ public class Config {
     public void setConsumerTag(String consumerTag) {
         this.consumerTag = consumerTag;
     }
+
+    public String getExchangeType() {
+        return exchangeType;
+    }
+
+    public void setExchangeType(String exchangeType) {
+        this.exchangeType = exchangeType;
+    }
+
+    public String getRoutingKey() {
+        return routingKey;
+    }
+
+    public void setRoutingKey(String routingKey) {
+        this.routingKey = routingKey;
+    }
+
 }

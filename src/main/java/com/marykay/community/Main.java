@@ -28,7 +28,8 @@ public class Main {
 
 //        test();
         try {
-            startConsumer(config.getAmqpURI(), config.getExchange(), config.getQueue(),"*");
+            startConsumer(config.getAmqpURI(), config.getExchange(), config.getExchangeType(),
+                    config.getQueueName(), config.getRoutingKey(), config.getConsumerTag());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
@@ -54,18 +55,23 @@ public class Main {
         }
     }
 
-    private static void startConsumer(String amqpURI, String exchangeName,String queue, String routingKey) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
+    private static void startConsumer(String amqpURI, String exchange, String exchangeType, String queueName, String routingKey, String consumerTag) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setUri(amqpURI);
-        Connection conn = factory.newConnection();
+        Connection conn = factory.newConnection(amqpURI);
 
         final Channel channel = conn.createChannel();
-        channel.exchangeDeclare(exchangeName, "direct", true);
-        String queueName = channel.queueDeclare().getQueue();
-        channel.queueBind(queueName, exchangeName, routingKey);
+        if (exchange.equals("")) {
+            channel.queueDeclare(queueName, true, false, false, null);
+        } else {
+            channel.exchangeDeclare(exchange, exchangeType, true);
+            channel.queueDeclare(queueName, true, false, false, null);
+            channel.queueBind(queueName, exchange, routingKey);
+        }
 
         boolean autoAck = false;
-        channel.basicConsume(queueName, autoAck, "myConsumerTag",
+
+        channel.basicConsume(queueName, autoAck, consumerTag,
                 new DefaultConsumer(channel) {
                     @Override
                     public void handleDelivery(String consumerTag,
@@ -79,7 +85,7 @@ public class Main {
                         long deliveryTag = envelope.getDeliveryTag();
                         // (process the message components here ...)
 
-                        System.out.print(new String(body));
+                        System.out.println(new String(body));
                         channel.basicAck(deliveryTag, false);
                     }
                 });
