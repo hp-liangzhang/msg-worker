@@ -1,0 +1,15 @@
+---
+applications:
+- name: Message.Worker2
+  instance: 1
+  memory: 512M
+  path: ./target
+  env:
+    CommunityDB: "data source=bjsa-rds-mdm-dev.cjuqevqtvrai.rds.cn-north-1.amazonaws.com.cn,5111;user id=siteuser;password=Yu0510ken;Max Pool Size=500;Application Name=MK.Message.Worker;initial catalog=communityapp_dev"
+    AppName: "Message.Worker2"
+    AMQP_URI: "amqp://admin:admin@10.209.2.201:5672"
+    QUEUE_NAME: "mkm.ibc.message.ack"
+    EXCHANGE: ""
+    ROUTING_KEY: "mkm.ibc.message.ack"
+    EXCHANGE_TYPE: "direct"
+    ENV: "DEV"

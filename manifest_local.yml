@@ -1,0 +1,15 @@
+---
+applications:
+- name: Message.Worker2
+  instance: 1
+  memory: 512M
+  path: ./target/msg-worker-1.0-SNAPSHOT-jar-with-dependencies.jar
+  env:
+    CommunityDB: "jdbc:sqlserver://wddcedsql20.mkdev.com:501;databaseName=Community;user=siteuser;password=B161C90H"
+    AppName: "Message.Worker2"
+    AMQP_URI: "amqp://mkuser:admin@localhost:5672"
+    QUEUE_NAME: "mkm.ibc.message.ack"
+    EXCHANGE: "mkm.ibc.private"
+    ROUTING_KEY: "mkm.ibc.private.com.marykay.china.community.11e7f03d-751c-4958-9b3d-ae9b747c8709"
+    EXCHANGE_TYPE: "topic"
+    ENV: "DEV"

@@ -1,0 +1,15 @@
+---
+applications:
+- name: Message.Worker2
+  instance: 1
+  memory: 512M
+  path: ./target/msg-worker-1.0-SNAPSHOT-jar-with-dependencies.jar
+  env:
+    CommunityDB: "jdbc:sqlserver://bjsa-rds-mdm-dev.cjuqevqtvrai.rds.cn-north-1.amazonaws.com.cn:5111;user id=siteuser;password=Yu0510ken;databaseName=communityapp_dev"
+    AppName: "Message.Worker2"
+    AMQP_URI: "amqp://admin:admin@10.209.2.201:5672"
+    QUEUE_NAME: "mkm.ibc.message.ack"
+    EXCHANGE: ""
+    ROUTING_KEY: "mkm.ibc.message.ack"
+    EXCHANGE_TYPE: "direct"
+    ENV: "DEV"
